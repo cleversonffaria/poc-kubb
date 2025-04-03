@@ -1,43 +1,51 @@
 import { defineConfig } from "@kubb/core";
-import { pluginFaker } from "@kubb/plugin-faker";
 import { pluginOas } from "@kubb/plugin-oas";
 import { pluginReactQuery } from "@kubb/plugin-react-query";
 import { pluginTs } from "@kubb/plugin-ts";
 import { pluginZod } from "@kubb/plugin-zod";
+import { pluginMsw } from "@kubb/plugin-msw";
+import { pluginFaker } from "@kubb/plugin-faker";
+import { pluginHookCustom } from "./kubb/plugins/hook-custom";
 
 export const config = {
   input: {
-    path: "./open_api.json",
+    // path: "https://fakerestapi.azurewebsites.net/swagger/v1/swagger.json", // 🔹 URL do Swagger JSON (OpenAPI) para gerar o código
+    path: "./open_api.json", // 🔹 URL do Swagger JSON (OpenAPI) para gerar o código
   },
   output: {
-    path: "./generated",
+    path: "./generated", // 🔹 Diretório onde os arquivos gerados serão salvos
     clean: true,
   },
   plugins: [
-    pluginOas(),
+    pluginOas(), // 🔹 Processa a OpenAPI e prepara os dados para os outros plugins
     pluginTs({
       output: {
-        path: "./types",
+        path: "./types", // 🔹 Diretório onde os tipos TypeScript serão salvos
         barrelType: "all",
+      },
+      transformers: {
+        name: (name, type) => {
+          return `${name}Type`; // 🔹 Adiciona `Type` ao final dos tipos gerados
+        },
       },
       group: {
         type: "tag",
         name: ({ group }) => `${group}Types`,
       },
-      enumSuffix: "Enum",
-    }),
+      enumSuffix: "Enum", // 🔹 Adiciona `Enum` ao final dos tipos enumerados
+    }), // 🔹 Gera automaticamente os tipos TypeScript baseados nos schemas da API
 
     pluginFaker({
       output: {
-        path: "./mocks",
-        barrelType: "named",
-        banner: "/* eslint-disable no-alert, no-console */",
+        path: "./mocks", // 🔹 Diretório onde os mocks do Faker serão salvos
+        barrelType: "named", // 🔹 Exporta os mocks individualmente
+        banner: "/* eslint-disable no-alert, no-console */", // 🔹 Adiciona um código ao início do arquivo
       },
       group: {
         type: "tag",
         name: ({ group }) => `${group}Mocks`,
       },
-      dateType: "string",
+      dateType: "string", // 🔹 Trata datas como strings (ISO 8601) em vez de objetos Date
       mapper: {
         userName: "faker.person.fullName()",
         email: "faker.internet.email()",
@@ -49,13 +57,28 @@ export const config = {
       },
       transformers: {
         name: (name, type) =>
-          `mock${name.charAt(0).toUpperCase()}${name.slice(1)}`,
+          `mock${name.charAt(0).toUpperCase()}${name.slice(1)}`, // 🔹 Adiciona prefixo "mock"
       },
+    }),
+
+    pluginMsw({
+      baseURL: "https://fakerestapi.azurewebsites.net",
+      output: {
+        path: "./mocks", // 🔹 Diretório onde os mocks do MSW serão salvos
+        barrelType: "named", // 🔹 Exporta os mocks individualmente
+        banner: "/* eslint-disable no-alert, no-console */", // 🔹 Adiciona um banner ao início do arquivo
+      },
+      group: {
+        type: "tag",
+        name: ({ group }) => `${group}Mocks`, // 🔹 Nomeia os arquivos como `NomeDaTagMocks.ts`
+      }, // 🔹 Gera automaticamente os mocks para os endpoints da API
+      handlers: true, // 🔹 Gera handlers para os mocks do MSW
+      parser: "faker", // 🔹 Faz o MSW utilizar os dados mockados pelo Faker
     }),
 
     pluginZod({
       output: {
-        path: "./zod",
+        path: "./zod", // 🔹 Diretório onde os schemas Zod serão salvos,
         barrelType: "all",
       },
       group: {
@@ -63,51 +86,67 @@ export const config = {
       },
       exclude: [
         {
-          type: "path",
-          pattern: "candles",
-        },
-        {
-          type: "path",
-          pattern: "exchanges",
-        },
-        {
-          type: "path",
-          pattern: "markets",
+          type: "path", // 🔹 Exclui schemas que contenham `path` no nome
+          pattern: "api", // 🔹 Exclui schemas que contenham `api` no nome
         },
       ],
-      typed: true,
-      dateType: "stringOffset",
-      unknownType: "unknown",
-      importPath: "zod",
+      typed: true, // 🔹 Gera schemas já tipados para serem inferidos no TypeScript
+      dateType: "stringOffset", // 🔹 Trata datas como strings (ISO 8601) em vez de objetos Date
+      unknownType: "unknown", // 🔹 Campos desconhecidos serão tratados como `unknown`
+      importPath: "zod", // 🔹 Define que os schemas importarão `zod` para validação
     }),
 
     pluginReactQuery({
       output: {
-        path: "./hooks",
+        path: "./hooks", // 🔹 Diretório onde os hooks do React Query serão salvos
         barrelType: "all",
       },
       group: {
         type: "tag",
-        name: ({ group }) => `${group}Hooks`,
+        name: ({ group }) => `${group}Hooks`, // 🔹 Nomeia os arquivos como `NomeDaTagHooks.ts`
       },
       client: {
-        dataReturnType: "full",
-        importPath: "../../../kubb/client",
+        baseURL: "https://fakerestapi.azurewebsites.net", // 🔹 Define a baseURL para as requisições HTTP
+        dataReturnType: "full", // 🔹 Retorna o objeto completo da resposta (incluindo headers e status)
       },
       mutation: {
-        methods: ["post", "put", "delete"],
-      },
-      infinite: {
-        queryParam: "next_page",
-        initialPageParam: 0,
-        cursorParam: "nextPage",
+        methods: ["post", "put", "delete"], // 🔹 Gera hooks `useMutation()` para métodos POST, PUT e DELETE
       },
       query: {
-        methods: ["get"],
-        importPath: "@tanstack/react-query",
+        methods: ["get"], // 🔹 Gera hooks `useQuery()` apenas para chamadas GET
+        importPath: "@tanstack/react-query", // 🔹 Importa o React Query do pacote correto
       },
-      paramsType: "object",
-      suspense: {},
+      suspense: {
+        enabled: false, // 👈 Aqui garante que NÃO será gerado useSuspenseQuery
+      },
+      // infinite: {
+      //   queryParam: "next_page", // 🔹 Define o parâmetro da próxima página para `useInfiniteQuery()`
+      //   initialPageParam: 0, // 🔹 Começa a paginação a partir de `0`
+      //   cursorParam: "nextPage", // 🔹 Usa `nextPage` para paginação baseada em cursor
+      // },
+      // parser: "zod", // 🔹 Faz o React Query utilizar os schemas Zod para validação
+    }),
+
+    pluginHookCustom({
+      output: {
+        path: "./hook-custom",
+        barrelType: "all",
+      },
+      group: {
+        type: "tag",
+        name: ({ group }) => `${group}HookCustom`,
+      },
+      transformers: {
+        name: (name) => {
+          return `useCustom${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+        },
+      },
+      // exclude: [
+      //   {
+      //     type: "path",
+      //     pattern: "api", // 🔹 Exclui schemas que contenham `api` no nome
+      //   },
+      // ],
     }),
   ],
 };

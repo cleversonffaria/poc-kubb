@@ -8,16 +8,20 @@
     "start": "next start",
     "lint": "next lint",
     "clean": "npx rimraf generated",
-    "generate": "bun run clean && kubb generate"
+    "fix-imports": "node ./scripts/fixImports.js",
+    "generate": "yarn run clean && kubb generate && yarn run fix-imports"
   },
   "dependencies": {
     "@faker-js/faker": "^9.5.0",
+    "@hookform/resolvers": "^4.1.0",
     "@tanstack/react-query": "^5.66.9",
     "add": "^2.0.6",
-    "msw": "^2.7.1",
+    "axios": "^1.8.4",
+    "msw": "^2.7.3",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.55.0",
     "yarn": "^1.22.22",
     "zod": "^3.24.2"
   },
@@ -40,5 +44,10 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
