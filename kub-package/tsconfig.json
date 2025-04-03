@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "jsx": "react-jsx",
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "allowJs": true,
+    "rootDir": "." 
+  },
+  "include": ["index.ts","client.ts"], 
+  "exclude": [
+    "node_modules",
+    "dist",
+    "generated",
+    "kubb.config.ts"
+  ]
+}

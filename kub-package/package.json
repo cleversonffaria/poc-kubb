@@ -1,0 +1,44 @@
+{
+  "name": "@poc/kubb",
+  "version": "1.0.4",
+  "description": "kubb client for react-query",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Cleverson Fernandes",
+  "type": "module",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "clean": "npx rimraf dist generated",
+    "generate": "kubb generate && yarn run fix-imports",
+    "build": "yarn clean && yarn generate && tsc --build",
+    "build:package": "yarn build && yarn pack",
+    "fix-imports": "node ./scripts/fixImports.js"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.5.0",
+    "@hookform/resolvers": "^4.1.0",
+    "@tanstack/react-query": "^5.66.9",
+    "@tanstack/react-query-devtools": "^5.66.9",
+    "axios": "^1.8.4",
+    "msw": "^2.7.3",
+    "unplugin-kubb": "^2.0.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@kubb/cli": "^3.6.0",
+    "@kubb/core": "^3.6.0",
+    "@kubb/plugin-client": "^3.7.2",
+    "@kubb/plugin-faker": "^3.6.0",
+    "@kubb/plugin-msw": "^3.6.0",
+    "@kubb/plugin-oas": "^3.6.0",
+    "@kubb/plugin-react-query": "^3.6.0",
+    "@kubb/plugin-ts": "^3.6.0",
+    "@kubb/plugin-zod": "^3.6.0",
+    "@types/node": "^22.14.0",
+    "path": "^0.12.7",
+    "typescript": "^5.7.3"
+  }
+}
