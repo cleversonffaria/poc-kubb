@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
-import { useGetApiV1Users } from "../../../generated";
 import ButtonNavigator from "@/component/Buttons";
+
+import { useGetApiV1Users } from "@poc/kubb";
 
 const ReactQueryHook: React.FC = () => {
   const {

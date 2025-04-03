@@ -8,34 +8,18 @@
     "start": "next start",
     "lint": "next lint",
     "clean": "npx rimraf generated",
-    "fix-imports": "node ./scripts/fixImports.js",
-    "generate": "yarn run clean && kubb generate && yarn run fix-imports"
+    "fix-imports": "node ./scripts/fixImports.js"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.5.0",
-    "@hookform/resolvers": "^4.1.0",
-    "@tanstack/react-query": "^5.66.9",
-    "add": "^2.0.6",
-    "axios": "^1.8.4",
-    "msw": "^2.7.3",
+    "@kubb/plugin-client": "^3.7.2",
+    "@poc/kubb": "../kub-package/poc-kubb-v1.0.4.tgz",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hook-form": "^7.55.0",
-    "yarn": "^1.22.22",
-    "zod": "^3.24.2"
+    "react-hook-form": "^7.55.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@kubb/cli": "^3.6.0",
-    "@kubb/core": "^3.6.0",
-    "@kubb/plugin-client": "^3.6.0",
-    "@kubb/plugin-faker": "^3.6.0",
-    "@kubb/plugin-msw": "^3.6.0",
-    "@kubb/plugin-oas": "^3.6.0",
-    "@kubb/plugin-react-query": "^3.6.0",
-    "@kubb/plugin-ts": "^3.6.0",
-    "@kubb/plugin-zod": "^3.6.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

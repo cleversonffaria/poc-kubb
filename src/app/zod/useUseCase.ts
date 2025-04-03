@@ -5,7 +5,7 @@ import {
   usePostApiV1Activities,
   activitySchema,
   ActivityType,
-} from "../../../generated";
+} from "@poc/kubb";
 import { useForm } from "react-hook-form";
 
 export const useUseCase = () => {

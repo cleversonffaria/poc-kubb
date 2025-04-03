@@ -1,7 +1,7 @@
 "use client";
 import { faker } from "@faker-js/faker";
 import React from "react";
-import { useCustomGetApiV1Activities } from "../../../generated";
+import { useCustomGetApiV1Activities } from "@poc/kubb";
 import ButtonNavigator from "@/component/Buttons";
 
 const CustomHook: React.FC = () => {
